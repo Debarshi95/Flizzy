@@ -8,7 +8,7 @@ import { validateLogin } from 'utils/formValidators'
 const GUEST_EMAIL = process.env.REACT_APP_GUEST_EMAIL
 const GUEST_PASSWORD = process.env.REACT_APP_GUEST_PASSWORD
 
-const Home = () => {
+const Signin = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -34,13 +34,10 @@ const Home = () => {
   }
 
   return (
-    <div className="flex p-4 flex-col md:flex-row md:justify-evenly items-center w-full min-h-screen">
-      <header className="h-fit  md:mb-10">
-        <Text className="text-gray-50 text-4xl md:text-6xl font-semibold" variant="h1">
-          Flizzy
-        </Text>
-        <Text className="text-gray-200 text-2xl">An employee management system</Text>
-      </header>
+    <div className="flex p-4 flex-col md:justify-evenly items-center w-full min-h-screen">
+      <Text className="h-fit text-gray-50 text-3xl font-medium" variant="h2">
+        Sign In as HR
+      </Text>
       <section className="w-full border-gray-600 border max-w-md mt-10 md:mt-0 p-4 rounded-md">
         <Formik
           initialValues={{
@@ -114,15 +111,12 @@ const Home = () => {
                       })
                     }}
                   >
-                    {isSubmitting ? 'Submitting...' : 'Signin with guest employee account'}
+                    {isSubmitting ? 'Submitting...' : 'Signin with guest HR account'}
                   </Button>
                   <Text className="text-gray-300 text-center my-2">
-                    HR?{' '}
-                    <Link
-                      to="/hr/signin"
-                      className="text-white font-medium hover:border-b-2 border-white"
-                    >
-                      Sign in as HR
+                    Not HR?{' '}
+                    <Link to="/" className="text-white font-medium hover:border-b-2 border-white">
+                      Sign in as Employee
                     </Link>
                   </Text>
                 </Form>
@@ -135,4 +129,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Signin
