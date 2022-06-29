@@ -22,7 +22,7 @@ module.exports = {
   },
   rules: {
     'react/jsx-filename-extension': ['warn', { extensions: ['.js', '.jsx'] }],
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', { semi: false }],
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -45,4 +45,4 @@ module.exports = {
     'react/no-danger': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
   },
-};
+}
