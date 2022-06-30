@@ -1,21 +1,39 @@
 import { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { Button, Card, Header, Input, Modal, Text } from 'components'
-import { REGISTER_EMPLOYEE_MUTATION, FETCH_EMPLOYEE_LIST } from 'constants/queries/queries'
-import withProtectedRoute from 'hoc/withProtectedRoute'
-import { useAuthContext } from 'providers'
+import { useToaster } from 'react-hot-toast'
 import { Form, Formik } from 'formik'
+import { Button, Card, Header, Input, Modal, Text } from 'components'
+import {
+  REGISTER_EMPLOYEE_MUTATION,
+  FETCH_EMPLOYEE_LIST,
+  LOGOUT_USER,
+} from 'constants/queries/queries'
+import { useAuthContext } from 'providers'
 import { validateUser } from 'utils/formValidators'
+import { deleteLocalStorageData, formatErrorMsg } from 'utils/helperFuncs'
+import withProtectedRoute from 'hoc/withProtectedRoute'
+
+const LOGOUT_USER_MUTATION_OPTIONS = {
+  onCompleted: (data) => {
+    const { success = false } = data?.logoutUser || {}
+    if (success) {
+      deleteLocalStorageData('token')
+    }
+  },
+}
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { user } = useAuthContext()
+  const { user, setUser } = useAuthContext()
 
+  const toast = useToaster()
   const [fetchEmployeeList, { data, loading, refetch: refetchUsers }] =
     useLazyQuery(FETCH_EMPLOYEE_LIST)
 
   const [createEmployee] = useMutation(REGISTER_EMPLOYEE_MUTATION)
+
+  const [logoutUser] = useMutation(LOGOUT_USER, LOGOUT_USER_MUTATION_OPTIONS)
 
   useEffect(() => {
     if (!loading) {
@@ -24,7 +42,6 @@ const Dashboard = () => {
   }, [fetchEmployeeList, loading])
 
   const handleSubmit = async (values) => {
-    console.log('clicked')
     try {
       const res = await createEmployee({
         variables: {
@@ -37,12 +54,26 @@ const Dashboard = () => {
         refetchUsers()
       }
     } catch (error) {
-      //
+      const message = formatErrorMsg(error)
+      toast.error(message)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      const res = await logoutUser()
+      const { success = false } = res.data?.logoutUser || {}
+      if (success) {
+        setUser(null)
+      }
+    } catch (error) {
+      const message = formatErrorMsg(error)
+      toast.error(message)
     }
   }
   return (
     <div className="text-white">
-      <Header user={user} />
+      <Header user={user} onBtnClick={handleLogout} />
       <header className="flex justify-between my-2">
         <Text variant="h2" className="text-2xl font-semibold">
           All Employees
