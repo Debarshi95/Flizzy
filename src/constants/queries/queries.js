@@ -8,6 +8,7 @@ const LOGIN_USER = gql`
       email
       name
       phoneNumber
+      address
       role
       salary
       designation
@@ -25,6 +26,7 @@ const FETCH_USER_DATA = gql`
       email
       name
       phoneNumber
+      address
       role
       salary
       designation
@@ -41,6 +43,7 @@ const FETCH_EMPLOYEE_LIST = gql`
       email
       phoneNumber
       salary
+      address
       designation
       role
       availableLeaves
@@ -72,10 +75,47 @@ const REGISTER_EMPLOYEE_MUTATION = gql`
       phoneNumber
       salary
       designation
+      address
       role
       availableLeaves
       active
     }
   }
 `
-export { LOGIN_USER, FETCH_USER_DATA, FETCH_EMPLOYEE_LIST, REGISTER_EMPLOYEE_MUTATION }
+
+const LOGOUT_USER = gql`
+  mutation logoutUser {
+    logoutUser {
+      message
+      success
+    }
+  }
+`
+
+const CREATE_LEAVE_RECORD = gql`
+  mutation createLeaveRecord($startDate: String!, $endDate: String!, $reason: String) {
+    createLeaveRecord(startDate: $startDate, endDate: $endDate, reason: $reason) {
+      message
+      success
+    }
+  }
+`
+const FETCH_LEAVE_RECORDS = gql`
+  query getLeaveRecords($employeeId: String) {
+    leaveRecords: getLeaveRecords(employeeId: $employeeId) {
+      reason
+      startDate
+      endDate
+      leaveStatus
+    }
+  }
+`
+export {
+  LOGIN_USER,
+  FETCH_USER_DATA,
+  FETCH_EMPLOYEE_LIST,
+  CREATE_LEAVE_RECORD,
+  REGISTER_EMPLOYEE_MUTATION,
+  LOGOUT_USER,
+  FETCH_LEAVE_RECORDS,
+}
