@@ -1,9 +1,9 @@
-import { HashLoader } from 'react-spinners'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 const Loader = ({ className }) => {
   return (
     <div className={className}>
-      <HashLoader color="white" />
+      <ClipLoader color="white" />
     </div>
   )
 }

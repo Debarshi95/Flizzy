@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
+import { Loader } from 'components'
 
 const HomePage = React.lazy(() => import('./Home/Home'))
 const EmployeePasswordPage = React.lazy(() => import('./Employee/UpdatePassword'))
@@ -17,7 +18,7 @@ const App = () => {
             index
             path="/"
             element={
-              <Suspense fallback={<h1>Hello</h1>}>
+              <Suspense fallback={<Loader />}>
                 <HomePage />
               </Suspense>
             }
@@ -26,7 +27,7 @@ const App = () => {
             <Route
               path="update-password"
               element={
-                <Suspense fallback={<h1>Hello</h1>}>
+                <Suspense fallback={<Loader />}>
                   <EmployeePasswordPage />
                 </Suspense>
               }
@@ -35,7 +36,7 @@ const App = () => {
               index
               path="dashboard"
               element={
-                <Suspense fallback={<h1>Hello</h1>}>
+                <Suspense fallback={<Loader />}>
                   <EmployeeDashboardPage />
                 </Suspense>
               }
@@ -46,7 +47,7 @@ const App = () => {
               index
               path="signin"
               element={
-                <Suspense fallback={<h1>Hello</h1>}>
+                <Suspense fallback={<Loader />}>
                   <HRSigninPage />
                 </Suspense>
               }
@@ -55,7 +56,7 @@ const App = () => {
               index
               path="dashboard"
               element={
-                <Suspense fallback={<h1>Hello</h1>}>
+                <Suspense fallback={<Loader />}>
                   <HRDashboardPage />
                 </Suspense>
               }
