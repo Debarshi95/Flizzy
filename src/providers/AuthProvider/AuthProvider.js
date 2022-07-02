@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
-import { getLocalStorageData, setLocalStorageData } from 'utils/helperFuncs'
+import { formatErrorMsg, getLocalStorageData, setLocalStorageData } from 'utils/helperFuncs'
 import { FETCH_USER_DATA } from 'constants/queries/queries'
 
 const AuthContext = createContext()
@@ -28,7 +28,8 @@ const AuthProvider = ({ children }) => {
         }
       } catch (err) {
         setUser(null)
-        setError(err?.message || 'Some error occurred')
+        const message = formatErrorMsg(err)
+        setError(message || 'Some error occurred')
       }
     }
 

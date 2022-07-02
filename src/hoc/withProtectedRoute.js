@@ -5,14 +5,14 @@ import { useAuthContext } from 'providers'
 const withProtectedRoute = (Component, role = 'EMP') => {
   return (props) => {
     const { state } = useLocation()
-    const { user, loading } = useAuthContext()
-    const token = localStorage.getItem('token')
+    const { user, loading, error } = useAuthContext()
+    // const token = localStorage.getItem('token')
 
     const pathname = state?.from?.pathname || '/'
 
-    if (loading || (token && !user)) return <Loader />
+    if (loading) return <Loader />
 
-    if (!user) {
+    if (!user || error) {
       return <Navigate to={pathname} />
     }
 

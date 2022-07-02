@@ -2,7 +2,7 @@
 
 # FLizzy
 
-A ReactJS based EMS.
+A ReactJS based app for Employee Management.
 
 ## Demo
 
