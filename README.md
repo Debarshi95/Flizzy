@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/Debarshi95/Flizzy/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/Debarshi95/Flizzy/actions)
+[![Actions Status](https://github.com/Debarshi95/Flizzy/workflows/Build%20and%20Netlify%20Deploy/badge.svg)](https://github.com/Debarshi95/Flizzy/actions)
 
 # FLizzy
 
