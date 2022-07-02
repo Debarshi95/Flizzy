@@ -119,6 +119,15 @@ const APPROVE_LEAVE_RECORD = gql`
     }
   }
 `
+
+const UPDATE_PASSWORD = gql`
+  mutation updatePassword($email: String!, $password: String!, $role: String!) {
+    updatePassword(email: $email, password: $password, role: $role) {
+      message
+      success
+    }
+  }
+`
 export {
   LOGIN_USER,
   FETCH_USER_DATA,
@@ -128,4 +137,5 @@ export {
   LOGOUT_USER,
   FETCH_LEAVE_RECORDS,
   APPROVE_LEAVE_RECORD,
+  UPDATE_PASSWORD,
 }
