@@ -7,8 +7,8 @@ import { formatErrorMsg, setLocalStorageData } from 'utils/helperFuncs'
 import { useAuthContext } from 'providers'
 import { LOGIN_USER } from 'constants/queries/queries'
 
-const GUEST_EMAIL = process.env.REACT_APP_GUEST_EMAIL
-const GUEST_PASSWORD = process.env.REACT_APP_GUEST_PASSWORD
+const EMP_GUEST_EMAIL = process.env.REACT_APP_EMP_GUEST_EMAIL
+const EMP_GUEST_PASSWORD = process.env.REACT_APP_EMP_GUEST_PASSWORD
 
 const LOGIN_USER_MUTATION_OPTIONS = {
   onCompleted: (data) => {
@@ -129,8 +129,8 @@ const Home = () => {
                     disabled={isSubmitting}
                     onClick={() => {
                       setValues({
-                        email: GUEST_EMAIL,
-                        password: GUEST_PASSWORD,
+                        email: EMP_GUEST_EMAIL,
+                        password: EMP_GUEST_PASSWORD,
                       })
                     }}
                   >

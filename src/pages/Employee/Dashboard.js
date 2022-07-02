@@ -23,8 +23,10 @@ const Dashboard = () => {
 
   const { user, setUser } = useAuthContext()
 
-  const [fetchLeaveRecords, { data, loading, refetch: refetchRecords }] =
-    useLazyQuery(FETCH_LEAVE_RECORDS)
+  const [fetchLeaveRecords, { data, loading, refetch: refetchRecords }] = useLazyQuery(
+    FETCH_LEAVE_RECORDS,
+    { fetchPolicy: 'network-only' }
+  )
 
   const [createLeaveRecord] = useMutation(CREATE_LEAVE_RECORD)
   const [logoutUser] = useMutation(LOGOUT_USER, LOGOUT_USER_MUTATION_OPTIONS)
@@ -33,7 +35,8 @@ const Dashboard = () => {
     if (!loading) {
       fetchLeaveRecords()
     }
-  }, [fetchLeaveRecords, loading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchLeaveRecords])
 
   const handleLogout = async () => {
     try {

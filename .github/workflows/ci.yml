@@ -1,0 +1,52 @@
+name: Test and Build
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js ${{matrix.node-version}}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Lint
+        run: yarn lint
+
+      # - name: Test
+      #   run: yarn test
+
+      - name: Build
+        env:
+          REACT_APP_APOLLO_URI: ${{secrets.REACT_APP_APOLLO_URI}}
+          REACT_APP_HR_GUEST_EMAIL: ${{ secrets.REACT_APP_HR_GUEST_EMAIL }}
+          REACT_APP_HR_GUEST_PASSWORD: ${{ secrets.REACT_APP_HR_GUEST_PASSWORD }}
+          REACT_APP_EMP_GUEST_EMAIL: ${{ secrets.REACT_APP_EMP_GUEST_EMAIL }}
+          REACT_APP_EMP_GUEST_PASSWORD: ${{ secrets.REACT_APP_EMP_GUEST_PASSWORD }}
+        run: yarn build
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './build'
+          deploy-message: ${{ github.event.pull_request.title }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1

@@ -1,0 +1,50 @@
+name: Build and Netlify Deploy
+
+on:
+  push:
+    branches: [master, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
+
+      - name: Install dependencies
+        run: yarn
+
+      # - name: Run the tests
+      #   run: yarn test
+
+      - name: Build
+        env:
+          REACT_APP_APOLLO_URI: ${{secrets.REACT_APP_APOLLO_URI}}
+          REACT_APP_HR_GUEST_EMAIL: ${{ secrets.REACT_APP_HR_GUEST_EMAIL }}
+          REACT_APP_HR_GUEST_PASSWORD: ${{ secrets.REACT_APP_HR_GUEST_PASSWORD }}
+          REACT_APP_EMP_GUEST_EMAIL: ${{ secrets.REACT_APP_EMP_GUEST_EMAIL }}
+          REACT_APP_EMP_GUEST_PASSWORD: ${{ secrets.REACT_APP_EMP_GUEST_PASSWORD }}
+        run: yarn build
+
+      - name: Deploy to Production
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './build'
+          production-branch: master
+          production-deploy: true
+          deploy-message: 'Production Deploy'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
