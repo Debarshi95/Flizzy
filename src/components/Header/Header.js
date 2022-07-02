@@ -10,7 +10,12 @@ const Header = ({ user, onBtnClick, ...props }) => {
       <Text variant="h1" className="text-3xl text-center">
         Hello, {user?.name}
       </Text>
-      <Text className="text-xl text-center md:text-start">Email: {user?.email}</Text>
+      <div className="text-base text-center md:text-start">
+        <Text>Email: {user?.email}</Text>
+        <Text>Designation: {user?.designation}</Text>
+        <Text>Salary: {user?.salary}LPA</Text>
+        <Text>Available Leaves: {user?.availableLeaves}</Text>
+      </div>
       <Button className="bg-slate-700 w-40 my-1 py-1" onClick={onBtnClick}>
         Logout
       </Button>

@@ -2,7 +2,7 @@ import moment from 'moment'
 import { useEffect, useRef, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { toast } from 'react-hot-toast'
-import { Button, DatePicker, Header, Text } from 'components'
+import { Button, DatePicker, Header, RecordCard, Text } from 'components'
 import { CREATE_LEAVE_RECORD, FETCH_LEAVE_RECORDS, LOGOUT_USER } from 'constants/queries/queries'
 import { useAuthContext } from 'providers'
 import { deleteLocalStorageData, formatErrorMsg } from 'utils/helperFuncs'
@@ -50,7 +50,8 @@ const Dashboard = () => {
 
   const handleOnDateChange = (dateRange) => {
     const [startDate, endDate] = dateRange
-    const totalDays = moment(endDate).diff(moment(startDate), 'days')
+    let totalDays = moment(endDate).diff(moment(startDate), 'days')
+    totalDays += 1
 
     if (totalDays > user.availableLeaves) {
       toast.error(`Requested date exceeds leave balance of ${user.availableLeaves} days`)
@@ -122,18 +123,7 @@ const Dashboard = () => {
       </Text>
       <section className="my-4 flex flex-wrap gap-y-3 md:gap-x-3">
         {data?.leaveRecords?.map((record, idx) => (
-          <div key={idx} className="text-gray-50 w-full md:w-fit bg-slate-900 p-4 rounded-sm">
-            <Text className="text-base">
-              Start Date: {moment(record.startDate).format('YYYY-MM-DD')}
-            </Text>
-            <Text className="text-base">
-              End Date: {moment(record.endDate).format('YYYY-MM-DD')}
-            </Text>
-            <Text className="my-1 text-lg">Reason: {record.reason}</Text>
-            <Text className="bg-blue-600 rounded-sm my-1 text-sm font-semibold p-2">
-              Status: {record.leaveStatus}
-            </Text>
-          </div>
+          <RecordCard key={idx} record={record} className="bg-slate-700" />
         ))}
       </section>
     </div>

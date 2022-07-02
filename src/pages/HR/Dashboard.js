@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { toast } from 'react-hot-toast'
-import { Button, Row, Header, Modal, Text, EmployeeForm } from 'components'
+import { Button, Row, Header, Modal, Text, EmployeeForm, EmployeeCard } from 'components'
 import { FETCH_EMPLOYEE_LIST, LOGOUT_USER } from 'constants/queries/queries'
 import { useAuthContext } from 'providers'
 import { deleteLocalStorageData, formatErrorMsg } from 'utils/helperFuncs'
@@ -21,11 +21,14 @@ const EMPLOYEE_DETAILS_MODAL = 'EMPLOYEE_DETAILS_MODAL'
 
 const Dashboard = () => {
   const [modal, setModal] = useState({})
+  const [selectedEmployee, setSelectedEmployee] = useState(null)
 
   const { user, setUser } = useAuthContext()
 
-  const [fetchEmployeeList, { data, loading, refetch: refetchUsers }] =
-    useLazyQuery(FETCH_EMPLOYEE_LIST)
+  const [fetchEmployeeList, { data, loading, refetch: refetchUsers }] = useLazyQuery(
+    FETCH_EMPLOYEE_LIST,
+    { fetchPolicy: 'network-only' }
+  )
 
   const [logoutUser] = useMutation(LOGOUT_USER, LOGOUT_USER_MUTATION_OPTIONS)
 
@@ -33,7 +36,8 @@ const Dashboard = () => {
     if (!loading) {
       fetchEmployeeList()
     }
-  }, [fetchEmployeeList, loading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchEmployeeList])
 
   const handleLogout = async () => {
     try {
@@ -80,7 +84,10 @@ const Dashboard = () => {
           <Row
             key={emp.id}
             employee={emp}
-            onClick={() => handleModalToggle(EMPLOYEE_DETAILS_MODAL)}
+            onClick={() => {
+              setSelectedEmployee(emp)
+              handleModalToggle(EMPLOYEE_DETAILS_MODAL)
+            }}
           />
         ))}
       </section>
@@ -95,10 +102,12 @@ const Dashboard = () => {
           />
         )}
 
-        {modal[EMPLOYEE_DETAILS_MODAL] && <h1>HEllo</h1>}
+        {modal[EMPLOYEE_DETAILS_MODAL] && (
+          <EmployeeCard employee={selectedEmployee} onSuccess={refetchUsers} />
+        )}
       </Modal>
     </div>
   )
 }
 
-export default withProtectedRoute(Dashboard)
+export default withProtectedRoute(Dashboard, 'HR')

@@ -1,21 +1,46 @@
-import { useLazyQuery } from '@apollo/client'
+import toast from 'react-hot-toast'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { useEffect } from 'react'
 import { Text, RecordCard } from 'components'
-import { FETCH_LEAVE_RECORDS } from 'constants/queries/queries'
+import { APPROVE_LEAVE_RECORD, FETCH_LEAVE_RECORDS } from 'constants/queries/queries'
+import { formatErrorMsg } from 'utils/helperFuncs'
 
-const EmployeeCard = ({ employee }) => {
+const EmployeeCard = ({ employee, onSuccess }) => {
   const [fetchLeaveRecords, { data, loading }] = useLazyQuery(FETCH_LEAVE_RECORDS, {
     variables: { employeeId: employee.id },
+    fetchPolicy: 'network-only',
   })
+
+  const [approveLeave] = useMutation(APPROVE_LEAVE_RECORD)
 
   useEffect(() => {
     if (!loading) {
       fetchLeaveRecords()
     }
-  }, [fetchLeaveRecords, loading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchLeaveRecords])
+
+  const handleApproveLeave = async (status = 'PENDING') => {
+    try {
+      const res = await approveLeave({
+        variables: {
+          employeeId: employee.id,
+          status,
+        },
+      })
+      const { success = false, message = '' } = res.data?.updateLeaveRecord || {}
+      if (success) {
+        toast.success(message)
+        onSuccess()
+      }
+    } catch (error) {
+      const message = formatErrorMsg(error)
+      toast.error(message)
+    }
+  }
   return (
     <div>
-      <div className="border-slate-200 border-2 rounded-sm">
+      <div>
         <Text
           variant="h1"
           className="text-3xl text-gray-50 font-semibold border-gray-50 border-b p-2 text-center"
@@ -38,7 +63,13 @@ const EmployeeCard = ({ employee }) => {
         <div>
           {data?.leaveRecords?.length ? (
             data?.leaveRecords?.map((record, idx) => (
-              <RecordCard key={idx} record={record} className="md:w-full mb-2 bg-slate-700" />
+              <RecordCard
+                key={idx}
+                record={record}
+                className="md:w-full mb-2 bg-slate-700"
+                onBtnClick={handleApproveLeave}
+                userRole="HR"
+              />
             ))
           ) : (
             <Text className="text-2xl text-center text-white my-6">No Record Found</Text>

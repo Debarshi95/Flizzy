@@ -28,7 +28,7 @@ const RecordCard = ({ record, className, userRole, onBtnClick }) => {
         {userRole === 'HR' && (
           <Select
             className="border-slate-600 border self-end bg-slate-600 rounded-sm my-1 flex-1 text-sm font-semibold p-1 ml-10"
-            onClick={() => onBtnClick}
+            onSelect={onBtnClick}
             options={menuOptions}
             defaultValue={record.leaveStatus}
           />

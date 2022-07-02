@@ -13,3 +13,16 @@ body {
 * {
   box-sizing: border-box;
 }
+
+@layer base {
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  .max-w-90 {
+    max-width: 90%;
+  }
+}
+.ReactModal__Body--open {
+  max-height: 100vh;
+  overflow: hidden;
+}

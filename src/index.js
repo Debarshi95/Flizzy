@@ -1,13 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import 'styles//index.css'
+import 'styles/index.css'
 import App from 'pages/App'
+import { ApolloProvider, AuthProvider } from 'providers'
 import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ApolloProvider>
   </React.StrictMode>
 )
 

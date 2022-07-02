@@ -110,6 +110,15 @@ const FETCH_LEAVE_RECORDS = gql`
     }
   }
 `
+
+const APPROVE_LEAVE_RECORD = gql`
+  mutation approveLeaveRecord($employeeId: String!, $status: String!) {
+    updateLeaveRecord(employeeId: $employeeId, status: $status) {
+      message
+      success
+    }
+  }
+`
 export {
   LOGIN_USER,
   FETCH_USER_DATA,
@@ -118,4 +127,5 @@ export {
   REGISTER_EMPLOYEE_MUTATION,
   LOGOUT_USER,
   FETCH_LEAVE_RECORDS,
+  APPROVE_LEAVE_RECORD,
 }

@@ -1,26 +1,46 @@
+import { useMutation } from '@apollo/client'
 import { Form, Formik } from 'formik'
-
 import { Link, useNavigate } from 'react-router-dom'
-
 import { Button, Text, Input } from 'components'
 import { validateLogin } from 'utils/formValidators'
+import { formatErrorMsg, setLocalStorageData } from 'utils/helperFuncs'
+import { useAuthContext } from 'providers'
+import { LOGIN_USER } from 'constants/queries/queries'
 
 const GUEST_EMAIL = process.env.REACT_APP_GUEST_EMAIL
 const GUEST_PASSWORD = process.env.REACT_APP_GUEST_PASSWORD
 
+const LOGIN_USER_MUTATION_OPTIONS = {
+  onCompleted: (data) => {
+    const { loginUser } = data || {}
+    if (loginUser?.token) {
+      setLocalStorageData('token', loginUser.token, true)
+    }
+  },
+}
 const Home = () => {
   const navigate = useNavigate()
+  const { setUser } = useAuthContext()
+  const [loginUser] = useMutation(LOGIN_USER, LOGIN_USER_MUTATION_OPTIONS)
 
   const handleSubmit = async (values, { resetForm }) => {
     let message
+    const { email, password } = values
 
     try {
-      const res = ''
-      if (res?.id) {
-        navigate('/', { replace: true })
+      const res = await loginUser({
+        variables: {
+          email,
+          password,
+          role: 'EMP',
+        },
+      })
+      if (res?.data?.loginUser) {
+        setUser(res.data.loginUser)
+        navigate('/employee/dashboard', { replace: true })
       }
     } catch (err) {
-      //
+      message = formatErrorMsg(err)
     }
 
     resetForm({
